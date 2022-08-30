@@ -1,0 +1,74 @@
+version: '3'
+
+services:
+
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    image: web
+    container_name: web
+    restart: always
+    tty: true
+    networks:
+      - Rede-mg
+
+  dns:
+    build:
+      context: ./dns
+      dockerfile: Dockerfile
+    image: dns
+    container_name: dns
+    hostname: ns1.mg.asa.br
+    restart: always
+    tty: true
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+    volumes:
+      - ./dns/bind:/etc/bind
+    networks:
+      - Rede-mg
+ 
+  mail:
+    image: 20182014050036/mail-server:1.0
+    container_name: email
+    hostname: mail.mg.asa.br
+    start: always
+    tty: true
+    ports:
+      - "25:25/tcp"
+      - "143:143/tcp"
+      - "587:587/tcp"
+    networks:
+      - Rede-mg
+
+  webmail:
+    image: 20182014050036/rainloop:1.0
+    container_name: webmail
+    hostname: webmail.mg.asa.br
+    start: always
+    tty: true
+    networks:
+      - Rede-mg
+  proxy:
+    build:
+      context: ./proxy
+      dockerfile: Dockerfile.proxy
+    image: proxy
+    container_name: proxy
+    hostname: www.mg.asa.br
+    restart: always
+    tty: true
+    ports:
+      - "80:80"
+    depends_on:
+      - web
+      - webmail
+    networks:
+      - Rede-mg
+
+#Docker Networks
+networks:
+  Rede-mg:
+    driver: bridge
