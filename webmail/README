@@ -1,0 +1,14 @@
+### CLIENTE MAIL ####
+
+# SERVIÇO #
+    - webmail rainloop
+    - apache2
+    - php7.2
+
+## imagem ####
+    #debian:buster personalizada
+    $docker build -t webmail .
+
+## Container ##
+
+    $docker run --name webmail -h webmail --net asa-net --ip 172.25.0.15 --dns 172.25.0.10 -itd -p 80:80 webmail
