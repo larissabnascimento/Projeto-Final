@@ -1,0 +1,15 @@
+# minha imagem
+FROM debian:buster
+#instalações e atualizações
+RUN  apt update ; apt upgrade -y
+RUN apt install -y bind9 dnsutils iputils-ping vim 
+# copia arquivo de execução para imagem 
+COPY entrypoint.sh .
+#libera as portas 
+EXPOSE 53/udp 53/tcp
+#mapear volume na imagem
+VOLUME ["/etc/bind"]
+#executar dentro da imagem 
+CMD [ "/etc/init.d/named", "restart", ]
+#executa oscript dentro da imagem
+ENTRYPOINT [ "/entrypoint.sh" ]

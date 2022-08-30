@@ -1,0 +1,6 @@
+FROM nginx:latest
+#copia o arquivo de configuração do nginx
+COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
+#copia a configuração do proxy
+COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
+

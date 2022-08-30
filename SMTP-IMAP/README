@@ -1,0 +1,14 @@
+# servidor de POSTIFIX - DOVECOT #
+
+##  SERVIC}ÇOS ##
+    - SMTP
+    - IMAP
+
+## IMAGEM ##
+    # vai criar a imagem que eu desenvolvi para esse servidor direto do meu docker hub # 
+    $docker build -t smtp-imap .
+
+## CONTAINER ##
+    # VAI CRIAR O CONTAINER 
+    $docker run --name smtp-imap -h mail --net asa-net --ip 172.25.0.25 --dns 172.25.0.10 -p 25:25 -p 143:143 -p 587:587/tcp  -itd 20182014050036/mail-server:1.0
+    

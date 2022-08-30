@@ -1,0 +1,30 @@
+# configurando um servidor dns autoritativo e reverso#
+# SERVIÇO DE DNS#
+    -Autoritativo
+    -Reverso
+#### imagem ####
+    
+    $docker build -t bind9 .
+
+#### Network ####
+    #para criar a net com faixa de ip que costumo usar com o grupo
+    $docker network create --subnet=172.25.0.0/24 Rede-mg
+    
+
+### container ####
+    #           nome container: host : rede    :  ip             :  dns            : mapeamento de volume    :  mapeamento de portas                    : imagem                   
+    $docker run --name dns -h dns --net asa-net --ip 172.25.0.10 --dns 172.25.0.10 -v $pwd/bind:/etc/bind -itd -p 0.0.0.0:53:53/tcp -p 0.0.0.0:53:53/udp bind9 
+
+##### mudar ip #####
+    # pode ser usado da seguinte forma : 
+     
+    $Docker exec -it dns bash 
+    # comando para mudar o ip nos arquivos
+                        # adiciona o seu ip de acordo com o exemplo 
+    $sed -i -e 's/seu-ip/192.168.9.101/' /etc/bind/db.mg.asa.br
+    $sed -i -e 's/-ip/101/' /etc/bind/reverse/db.mg.asa.br.rev
+    $sed -i -e 's/ip-reverse/9.168.192/' /etc/bind/reverse/db.mg.asa.br.rev
+    $sed -i -e 's/ip-reverse/9.168.192/' /etc/bind/named.conf.default-zones
+
+    # por ultimo ainda dentro do container 
+        $service bind9 restart 
